@@ -1,0 +1,69 @@
+[mod]
+id = "eg_realms_tester"
+name = "Realms Tester"
+description = "Multi-version, multi-loader mod template for Minecraft using Stonecutter."
+group = "games.enchanted"
+version = "1.0.0"
+license = "MIT"
+source_url = "https://github.com/Enchanted-Games/enchanteds-mod-template"
+issue_tracker = "https://github.com/Enchanted-Games/enchanteds-mod-template/issues"
+icon = "assets/eg_realms_tester/icon.png"
+
+# neoforge versions: https://projects.neoforged.net/neoforged/neoforge
+# fabric versions: https://fabricmc.net/develop/
+
+[fabric]
+deps.fabric-loader = "0.19.3"
+dep_str.fabric-loader = ">=0.19"
+
+["1.21.11"]
+deps.minecraft = "1.21.11"
+
+deps.parchment = "1.21.10:2025.10.12"
+
+[fabric."1.21.11"]
+dep_str.minecraft = "1.21.11"
+
+deps.fabric-api = "0.139.4+1.21.11"
+dep_str.fabric-api = ">=0.139.4+1.21.11"
+
+deps.modmenu = "17.0.0-alpha.1"
+
+[neoforge."1.21.11"]
+dep_str.minecraft = "[1.21.11,1.21.11]"
+
+deps.neoforge = "21.11.10-beta"
+
+
+["26.1"]
+deps.minecraft = "26.1.2"
+
+[fabric."26.1"]
+dep_str.minecraft = ">=26.1 <26.2"
+
+deps.fabric-api = "0.154.2+26.1.2"
+dep_str.fabric-api = ">=0.154.2+26.1.2"
+
+deps.modmenu = "18.0.0-alpha.8"
+
+[neoforge."26.1"]
+dep_str.minecraft = "[26.1,26.2)"
+
+deps.neoforge = "26.1.2.78"
+
+
+["26.2"]
+deps.minecraft = "26.2"
+
+[fabric."26.2"]
+dep_str.minecraft = ">=26.2 <26.3"
+
+deps.fabric-api = "0.154.2+26.2"
+dep_str.fabric-api = ">=0.154.2+26.2"
+
+deps.modmenu = "20.0.0-beta.4"
+
+[neoforge."26.2"]
+dep_str.minecraft = "[26.2,26.3)"
+
+deps.neoforge = "26.2.0.8-beta"
