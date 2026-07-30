@@ -66,7 +66,7 @@ public class FakeRealmsClient extends RealmsClient {
 
     @Override
     public RealmsServer getOwnRealm(long realmId) throws RealmsServiceException {
-        return FakeRealmsState.instance().ownedRealm();
+        return FakeRealmsState.instance().getRealm(realmId);
     }
 
 

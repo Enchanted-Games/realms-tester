@@ -1,6 +1,7 @@
 package games.enchanted.eg_realms_tester.common.realms;
 
 import com.mojang.realmsclient.dto.*;
+import games.enchanted.eg_realms_tester.common.mixin.accessor.RealmsServerAccess;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.User;
@@ -13,35 +14,38 @@ import java.util.*;
 public class FakeRealmsState {
     private static final FakeRealmsState INSTANCE = new FakeRealmsState();
 
-    private final RealmsServer ownedRealm;
     private final List<RealmsServer> fakeRealms;
+    private final Map<Long, RealmsServer> realmIdToServer;
 
     FakeRealmsState() {
         User user = Minecraft.getInstance().getUser();
 
-        this.ownedRealm = createFakeRealm(
+        List<RealmsServer> fakeRealms = new ArrayList<>();
+
+        fakeRealms.add(createFakeRealm(
             FakeRealmsClient.RECURRING_REALM,
-            "Open, configurable, recurring subscription",
+            "Open, recurring subscription",
             user.getName(),
             user.getProfileId(),
             30,
             createPlayerInfoList(),
             RealmsServer.State.OPEN,
-            RealmsServer.Compatibility.COMPATIBLE
-        );
-
-        List<RealmsServer> fakeRealms = new ArrayList<>();
-        fakeRealms.add(this.ownedRealm);
+            RealmsServer.Compatibility.COMPATIBLE,
+            slots(),
+            1
+        ));
 
         fakeRealms.add(createFakeRealm(
             FakeRealmsClient.EXPIRING_SOON_REALM,
-            "Expires soon",
+            "Expires soon, no worlds",
             user.getName(),
             user.getProfileId(),
             1,
             createPlayerInfoList(),
             RealmsServer.State.OPEN,
-            RealmsServer.Compatibility.COMPATIBLE
+            RealmsServer.Compatibility.COMPATIBLE,
+            List.of(),
+            1
         ));
 
         fakeRealms.add(createFakeRealm(
@@ -52,7 +56,9 @@ public class FakeRealmsState {
             30,
             createPlayerInfoList(),
             RealmsServer.State.UNINITIALIZED,
-            RealmsServer.Compatibility.COMPATIBLE
+            RealmsServer.Compatibility.COMPATIBLE,
+            slots(),
+            1
         ));
 
         fakeRealms.add(createFakeRealm(
@@ -63,7 +69,9 @@ public class FakeRealmsState {
             30,
             createPlayerInfoList(),
             RealmsServer.State.CLOSED,
-            RealmsServer.Compatibility.COMPATIBLE
+            RealmsServer.Compatibility.COMPATIBLE,
+            slots(),
+            2
         ));
 
         fakeRealms.add(createFakeRealm(
@@ -74,10 +82,17 @@ public class FakeRealmsState {
             -1,
             createPlayerInfoList(),
             RealmsServer.State.OPEN,
-            RealmsServer.Compatibility.COMPATIBLE
+            RealmsServer.Compatibility.COMPATIBLE,
+            slots(),
+            3
         ));
 
         this.fakeRealms = fakeRealms;
+
+        this.realmIdToServer = new HashMap<>();
+        for (RealmsServer realm : this.fakeRealms) {
+            this.realmIdToServer.put(realm.id, realm);
+        }
     }
 
     public static FakeRealmsState instance() {
@@ -88,8 +103,8 @@ public class FakeRealmsState {
         return this.fakeRealms;
     }
 
-    public RealmsServer ownedRealm() {
-        return this.ownedRealm;
+    public RealmsServer getRealm(long id) {
+        return this.realmIdToServer.get(id);
     }
 
     public RealmsServerPlayerLists liveStats() {
@@ -116,7 +131,9 @@ public class FakeRealmsState {
         int daysLeft,
         List<PlayerInfo> playerInfo,
         RealmsServer.State state,
-        RealmsServer.Compatibility compatibility
+        RealmsServer.Compatibility compatibility,
+        List<RealmsSlot> slots,
+        int activeSlot
     ) {
         RealmsServer server = new RealmsServer();
         server.id = id;
@@ -131,8 +148,8 @@ public class FakeRealmsState {
         server.daysLeft = daysLeft;
         server.worldType = RealmsServer.WorldType.NORMAL;
         server.isHardcore = false;
-        server.activeSlot = 1;
-        server.slots = slots();
+        server.activeSlot = activeSlot;
+        ((RealmsServerAccess) server).eg_realmes_tester$setSlotList(slots);
         server.activeVersion = SharedConstants.getCurrentVersion().name();
         server.compatibility = compatibility;
 
@@ -150,16 +167,33 @@ public class FakeRealmsState {
         return players;
     }
 
-    private static Map<Integer, RealmsSlot> slots() {
-        Map<Integer, RealmsSlot> slots = new HashMap<>();
-        slots.put(1, new RealmsSlot(
+    private static List<RealmsSlot> slots() {
+        List<RealmsSlot> slots = new ArrayList<>();
+
+        slots.add(new RealmsSlot(
             1,
             RealmsWorldOptions.createDefaultsWith(GameType.CREATIVE, Difficulty.NORMAL, false, SharedConstants.getCurrentVersion().name(), "Creative"),
             List.of(RealmsSetting.hardcoreSetting(false))
         ));
-        slots.put(2, new RealmsSlot(2, RealmsWorldOptions.createDefaults(), List.of()));
-        slots.put(3, new RealmsSlot(3, RealmsWorldOptions.createDefaults(), List.of()));
-        slots.put(4, new RealmsSlot(4, RealmsWorldOptions.createDefaults(), List.of()));
+
+        slots.add(new RealmsSlot(
+            2,
+            RealmsWorldOptions.createDefaultsWith(GameType.CREATIVE, Difficulty.NORMAL, false, SharedConstants.getCurrentVersion().name(), "Hardcore"),
+            List.of(RealmsSetting.hardcoreSetting(true))
+        ));
+
+        slots.add(new RealmsSlot(3, RealmsWorldOptions.createDefaults(), List.of()));
+
+        return slots;
+    }
+
+    private static List<RealmsSlot> emptySlots() {
+        List<RealmsSlot> slots = new ArrayList<>();
+
+        slots.add(new RealmsSlot(1, RealmsWorldOptions.createEmptyDefaults(), List.of()));
+        slots.add(new RealmsSlot(2, RealmsWorldOptions.createEmptyDefaults(), List.of()));
+        slots.add(new RealmsSlot(3, RealmsWorldOptions.createEmptyDefaults(), List.of()));
+
         return slots;
     }
 }

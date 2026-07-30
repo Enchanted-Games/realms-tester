@@ -8,7 +8,8 @@
     "client": [
         "RealmsClientMixin",
         "accessor.BackupAccess",
-        "accessor.RealmsNotificationAccess"
+        "accessor.RealmsNotificationAccess",
+        "accessor.RealmsServerAccess"
     ],
     "injectors": {
         "defaultRequire": 1
