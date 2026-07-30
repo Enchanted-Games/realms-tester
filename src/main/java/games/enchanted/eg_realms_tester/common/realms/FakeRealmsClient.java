@@ -1,4 +1,4 @@
-package games.enchanted.eg_realms_tester.common;
+package games.enchanted.eg_realms_tester.common.realms;
 
 import com.mojang.realmsclient.client.RealmsClient;
 import com.mojang.realmsclient.dto.*;
@@ -8,10 +8,7 @@ import games.enchanted.eg_realms_tester.common.mixin.accessor.RealmsNotification
 import net.minecraft.client.Minecraft;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class FakeRealmsClient extends RealmsClient {
     public static final String ENCHANTED_GAMES_SITE = "https://enchanted.games";
@@ -19,6 +16,12 @@ public class FakeRealmsClient extends RealmsClient {
     public static final UUID ENCHANTED_GAMES_UUID = UUID.fromString("aa495c8b-5acf-4e0c-bbdb-df4cfa643e3a");
     public static final String IOBLACKSHAW_USER = "ioblackshaw";
     public static final UUID IOBLACKSHAW_UUID = UUID.fromString("e5ff8f5a-f631-415b-871a-134a2eb899d9");
+
+    public static final long RECURRING_REALM = 1L;
+    public static final long EXPIRING_SOON_REALM = 2L;
+    public static final long NORMAL_REALM = 3L;
+    public static final long CLOSED_REALM = 4L;
+    public static final long EXPIRED_REALM = 5L;
 
     protected final List<RealmsNotification> notifications;
     protected final List<PendingInvite> invites;
@@ -39,11 +42,7 @@ public class FakeRealmsClient extends RealmsClient {
 
     @Override
     public RealmsServerList listRealms() throws RealmsServiceException {
-        List<RealmsServer> servers = new ArrayList<>();
-
-        servers.add(new RealmsServer());
-
-        return new RealmsServerList(servers);
+        return new RealmsServerList(FakeRealmsState.instance().fakeRealms());
     }
 
     @Override
@@ -67,7 +66,7 @@ public class FakeRealmsClient extends RealmsClient {
 
     @Override
     public RealmsServer getOwnRealm(long realmId) throws RealmsServiceException {
-        return new RealmsServer();
+        return FakeRealmsState.instance().ownedRealm();
     }
 
 
@@ -79,7 +78,7 @@ public class FakeRealmsClient extends RealmsClient {
 
     @Override
     public RealmsServerPlayerLists getLiveStats() throws RealmsServiceException {
-        return new RealmsServerPlayerLists(Map.of(-1L, List.of()));
+        return FakeRealmsState.instance().liveStats();
     }
 
 
@@ -105,18 +104,27 @@ public class FakeRealmsClient extends RealmsClient {
 
     @Override
     public WorldTemplatePaginatedList fetchWorldTemplates(int page, int pageSize, RealmsServer.WorldType type) throws RealmsServiceException {
-        List<WorldTemplate> templates = List.of(new WorldTemplate(
-            "fake",
-            "fake",
-            "1.0",
-            ENCHANTED_GAMES_USER,
-            ENCHANTED_GAMES_SITE,
-            null,
-            "",
-            "1",
-            WorldTemplate.WorldTemplateType.MINIGAME
-        ));
-        return new WorldTemplatePaginatedList(templates, page, pageSize, 1);
+        if(page > 1) {
+            return new WorldTemplatePaginatedList(0);
+        }
+
+        List<WorldTemplate> templates = new ArrayList<>();
+
+        for (int i = 0; i < pageSize; i++) {
+            templates.add(new WorldTemplate(
+                "fake",
+                "A world template",
+                "1.0.0",
+                ENCHANTED_GAMES_USER,
+                ENCHANTED_GAMES_SITE,
+                null,
+                ENCHANTED_GAMES_SITE,
+                Integer.toString((int) Math.ceil(Math.random() * 20)),
+                WorldTemplate.WorldTemplateType.MINIGAME
+            ));
+        }
+
+        return new WorldTemplatePaginatedList(templates, page, pageSize, pageSize * 2);
     }
 
     @Override
@@ -127,7 +135,14 @@ public class FakeRealmsClient extends RealmsClient {
 
     @Override
     public Subscription subscriptionFor(long realmId) throws RealmsServiceException {
-        return new Subscription(Instant.MIN, 99999999, Subscription.SubscriptionType.NORMAL);
+        if(realmId == RECURRING_REALM) {
+            return new Subscription(Instant.now(), 1, Subscription.SubscriptionType.RECURRING);
+        } else if(realmId == EXPIRING_SOON_REALM) {
+            return new Subscription(Instant.now(), 1, Subscription.SubscriptionType.NORMAL);
+        } else if(realmId == EXPIRED_REALM) {
+            return new Subscription(Instant.now().minusSeconds(60 * 60), -1, Subscription.SubscriptionType.NORMAL);
+        }
+        return new Subscription(Instant.now(), 30, Subscription.SubscriptionType.NORMAL);
     }
 
 
@@ -144,6 +159,10 @@ public class FakeRealmsClient extends RealmsClient {
     @Override
     public RealmsNews getNews() throws RealmsServiceException {
         return new RealmsNews(ENCHANTED_GAMES_SITE);
+    }
+
+    @Override
+    public void sendPingResults(PingResult pingResult) throws RealmsServiceException {
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.mojang.realmsclient.client.RealmsClient;
 import com.mojang.realmsclient.client.RealmsError;
 import com.mojang.realmsclient.client.Request;
 import com.mojang.realmsclient.exception.RealmsServiceException;
-import games.enchanted.eg_realms_tester.common.FakeRealmsClient;
+import games.enchanted.eg_realms_tester.common.realms.FakeRealmsClient;
 import games.enchanted.eg_realms_tester.common.Logging;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -36,7 +36,7 @@ public class RealmsClientMixin {
     private String eg_realms_tester$wrapExecute(Request<?> request, Operation<String> original) throws RealmsServiceException {
         if((Object) this instanceof FakeRealmsClient) {
             Logging.info("Request: {}", request);
-            throw new RealmsServiceException(new RealmsError.CustomError(418, Component.literal("I'm a teapot. Realms Tester prevented a realms http request")));
+            throw new RealmsServiceException(new RealmsError.CustomError(418, Component.literal("418 I'm a teapot. Cannot interact with fake realms")));
         }
         return original.call(request);
     }
