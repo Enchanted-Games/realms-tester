@@ -37,14 +37,6 @@ repositories {
 dependencies {
     minecraft("com.mojang:minecraft:${sc.properties.get<String>("deps.minecraft")}")
     implementation("net.fabricmc:fabric-loader:${sc.properties.get<String>("deps.fabric-loader")}")
-    implementation("net.fabricmc.fabric-api:fabric-api:${sc.properties.get<String>("deps.fabric-api")}")
-
-    // Mod Menu
-    if (hasProperty("deps.modmenu")) {
-        api("com.terraformersmc:modmenu:${sc.properties.get<String>("deps.modmenu")}")
-    } else {
-        compileOnly("com.terraformersmc:modmenu:18.0.0-alpha.8")
-    }
 }
 
 loom {
@@ -79,7 +71,6 @@ tasks.named<ProcessResources>("processResources") {
         this["icon"] = prop("mod.icon")
         this["license"] = prop("mod.license")
         this["fabric_loader_dep_str"] = prop("dep_str.fabric-loader")
-        this["fabric_api_dep_str"] = prop("dep_str.fabric-api")
         this["java_ver"] = java.targetCompatibility.majorVersion
     }
 
@@ -144,8 +135,6 @@ publishMods {
             accessToken = env.MODRINTH_API_KEY.orNull()
             minecraftVersions.add(sc.properties.get<String>("deps.minecraft"))
             minecraftVersions.addAll(additionalVersions)
-            requires("fabric-api")
-            optional("modmenu")
         }
     }
 
@@ -155,7 +144,6 @@ publishMods {
             accessToken = env.CURSEFORGE_API_KEY.orNull()
             minecraftVersions.add(stonecutter.current.version)
             minecraftVersions.addAll(additionalVersions)
-            requires("fabric-api")
         }
     }
 }

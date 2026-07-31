@@ -13,13 +13,10 @@
   },
   "license": "${license}",
   "icon": "${icon}",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "main": [
       "${group}.${id}.fabric.FabricEntry"
-    ],
-    "modmenu": [
-      "${group}.${id}.fabric.ModMenuIntegration"
     ]
   },
   ${accesswidener_field}
@@ -30,7 +27,6 @@
   ],
   "depends": {
     "minecraft": "${minecraft}",
-    "fabricloader": "${fabric_loader_dep_str}",
-    "fabric-api": "${fabric_api_dep_str}"
+    "fabricloader": "${fabric_loader_dep_str}"
   }
 }
