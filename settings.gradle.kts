@@ -27,8 +27,9 @@ stonecutter {
             }
 
         ver("26.2", "fabric")
+        ver("26.3", "fabric")
 
-        vcsVersion = "26.2-fabric"
+        vcsVersion = "26.3-fabric"
     }
 }
 

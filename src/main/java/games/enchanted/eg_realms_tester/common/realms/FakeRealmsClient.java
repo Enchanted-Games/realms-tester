@@ -169,4 +169,14 @@ public class FakeRealmsClient extends RealmsClient {
     public Boolean trialAvailable() throws RealmsServiceException {
         return true;
     }
+
+    //? if minecraft: >= 26.3 {
+    @Override
+    public RealmTierConfigurationDto getRealmTierConfiguration(long realmId) throws RealmsServiceException {
+        return new RealmTierConfigurationDto(
+            new RealmTierConfigurationDto.RealmTierRangeDto(0, 32, 24, 24),
+            new RealmTierConfigurationDto.RealmTierRangeDto(0, 32, 24, 24)
+        );
+    }
+    //? }
 }
