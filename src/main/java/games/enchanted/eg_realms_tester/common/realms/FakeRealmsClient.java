@@ -174,9 +174,19 @@ public class FakeRealmsClient extends RealmsClient {
     @Override
     public RealmTierConfigurationDto getRealmTierConfiguration(long realmId) throws RealmsServiceException {
         return new RealmTierConfigurationDto(
-            new RealmTierConfigurationDto.RealmTierRangeDto(0, 32, 24, 24),
-            new RealmTierConfigurationDto.RealmTierRangeDto(0, 32, 24, 24)
+            new RealmTierConfigurationDto.RealmTierRangeDto(2, 25, 25, 25),
+            new RealmTierConfigurationDto.RealmTierRangeDto(2, 25, 25, 14)
         );
+    }
+
+    @Override
+    public InviteCodeList inviteCodes(long realmId) throws RealmsServiceException {
+        return new InviteCodeList(List.of(
+            new InviteCode("6767", Instant.now().plusSeconds(60), true),
+            new InviteCode("nArIVc", Instant.now().minusSeconds(60), true),
+            new InviteCode("eNcHanTEdgAmEs", Instant.now().plusSeconds(60), false),
+            new InviteCode("mcjava", Instant.now().minusSeconds(60), false)
+        ));
     }
     //? }
 }
