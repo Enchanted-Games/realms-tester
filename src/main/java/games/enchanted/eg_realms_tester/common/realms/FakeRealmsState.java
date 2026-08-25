@@ -153,6 +153,10 @@ public class FakeRealmsState {
         server.activeVersion = SharedConstants.getCurrentVersion().name();
         server.compatibility = compatibility;
 
+        if(!SharedConstants.getCurrentVersion().stable()) {
+            server.parentRealmId = 0;
+        }
+
         RealmsServer.finalize(server);
 
         return server;
