@@ -14,7 +14,7 @@ icon = "assets/eg_realms_tester/icon.png"
 
 [fabric]
 deps.fabric-loader = "0.19.3"
-dep_str.fabric-loader = ">=0.19"
+dep_str.fabric-loader = ">=0.19.4"
 
 ["26.2"]
 deps.minecraft = "26.2"
