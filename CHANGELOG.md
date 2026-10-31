@@ -1,3 +1,3 @@
-# 1.0.0
+# 1.1.0
 
-- Initial release
+- Updated to 26.3 and 26.4-snapshot-6

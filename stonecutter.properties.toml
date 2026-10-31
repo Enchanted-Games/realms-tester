@@ -3,7 +3,7 @@ id = "eg_realms_tester"
 name = "Realms Tester"
 description = "A utility for resource pack developers which allows you to open the realms screen with a fake realm so you can test your resource pack properly without needing to buy a realm."
 group = "games.enchanted"
-version = "1.0.0"
+version = "1.1.0"
 license = "CC BY-NC 4.0"
 source_url = "https://github.com/Enchanted-Games/enchanteds-mod-template"
 issue_tracker = "https://github.com/Enchanted-Games/enchanteds-mod-template/issues"
@@ -13,13 +13,13 @@ icon = "assets/eg_realms_tester/icon.png"
 # fabric versions: https://fabricmc.net/develop/
 
 [fabric]
-deps.fabric-loader = "0.19.3"
-dep_str.fabric-loader = ">=0.19.4"
-
-["26.2"]
-deps.minecraft = "26.2"
-dep_str.minecraft = ">=26.2 <26.3"
+deps.fabric-loader = "0.20.0"
+dep_str.fabric-loader = ">=0.20.0"
 
 ["26.3"]
-deps.minecraft = "26.3-snapshot-10"
-dep_str.minecraft = ">26.2 <26.4"
+deps.minecraft = "26.3"
+dep_str.minecraft = ">=26.3 <26.4"
+
+["26.4"]
+deps.minecraft = "26.4-snapshot-6"
+dep_str.minecraft = ">26.3 <26.5"

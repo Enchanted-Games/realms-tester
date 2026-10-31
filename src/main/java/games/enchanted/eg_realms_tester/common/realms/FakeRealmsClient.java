@@ -7,11 +7,12 @@ import games.enchanted.eg_realms_tester.common.mixin.accessor.BackupAccess;
 import games.enchanted.eg_realms_tester.common.mixin.accessor.RealmsNotificationAccess;
 import net.minecraft.client.Minecraft;
 
+import java.net.URI;
 import java.time.Instant;
 import java.util.*;
 
 public class FakeRealmsClient extends RealmsClient {
-    public static final String ENCHANTED_GAMES_SITE = "https://enchanted.games";
+    public static final URI ENCHANTED_GAMES_SITE = URI.create("https://enchanted.games");
     public static final String ENCHANTED_GAMES_USER = "Enchanted_Games";
     public static final UUID ENCHANTED_GAMES_UUID = UUID.fromString("aa495c8b-5acf-4e0c-bbdb-df4cfa643e3a");
     public static final String IOBLACKSHAW_USER = "ioblackshaw";

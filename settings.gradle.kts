@@ -26,8 +26,8 @@ stonecutter {
                 version("$version-${loaderName}", version).buildscript = "build.$it.gradle.kts"
             }
 
-        ver("26.2", "fabric")
         ver("26.3", "fabric")
+        ver("26.4", "fabric")
 
         vcsVersion = "26.3-fabric"
     }
